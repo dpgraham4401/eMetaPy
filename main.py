@@ -4,9 +4,10 @@ Test use of the MetaBase API
 
 import sys
 import json
+import os
 import auth
-#import user
 import query
+from card import MetaRequest
 
 if not sys.version_info > (2, 7):
     print('error: python version 2 not supported')
@@ -14,6 +15,10 @@ if not sys.version_info > (2, 7):
 elif not sys.version_info >= (3, 5):
     print('warning: Python >= 3.5 not supported, proceeding')
 
+base_url = 'https://rcraquery.epa.gov/metabase'
 auth.token()
 test = query.get_card_id('2991', 'json')
-print(json.dumps(test, indent = 1))
+# Only works with json at the moment
+#test = MetaRequest(base_url, os.getenv('META_TOKEN'))
+print(test)
+#print(json.dumps(test.get('/api/card/2991'), indent = 1))
