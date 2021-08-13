@@ -1,10 +1,14 @@
+# -*- coding: utf-8 -*-
 """
-Request qeury  results?
+Created on Fri Aug 13 09:56:44 2021
+
+@author: dpgraham4401
 """
 
 # import json
 import os
 import requests
+
 
 def get_cards(card_type):
     """Request query (card) options"""
@@ -17,6 +21,7 @@ def get_cards(card_type):
     res = requests.get(auth_url, headers=meta_head)
     res = res.json()
     return res
+
 
 def get_card_id(card_id, export_frmt):
     """GET metabase card"""

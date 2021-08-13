@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
 """
-Get user information
+Created on Fri Aug 13 09:56:44 2021
+
+@author: dpgraham4401
 """
 
 import requests, json, os
+
 
 def current_user():
     """Request current user info"""
@@ -13,7 +17,8 @@ def current_user():
                  'X-Metabase-Session': id}
     res = requests.get(auth_url, headers=meta_head)
     res = res.json()
-    return res 
+    return res
+
 
 def recent():
     """curent user recnt views"""

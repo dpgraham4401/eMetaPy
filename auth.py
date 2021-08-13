@@ -1,13 +1,16 @@
-'''
-Manage Metabase session token
-'''
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Aug 13 09:45:41 2021
+
+@author: dpgraham4401
+"""
 from datetime import datetime, timedelta
 import os
 import sys
 import json
 import requests
 from dotenv import load_dotenv
-#from requests.api import get
+# from requests.api import get
 
 load_dotenv()
 
@@ -36,10 +39,11 @@ def token():
                 print("Token: Good")
             else:
                 print("Token error: hmmm something ain't right, "
-                "contact support")
+                      "contact support")
     except SystemExit as err:
         print(err)
         sys.exit(1)
+
 
 def __get_token():
     """Request new session token"""
@@ -58,6 +62,7 @@ def __get_token():
     os.environ['META_TOKEN'] = token_obj['id']
     os.environ['TOKEN_EXP'] = token_obj['exp']
     return token_obj
+
 
 def __write_token(token_obj):
     try:

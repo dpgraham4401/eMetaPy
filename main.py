@@ -1,13 +1,15 @@
-'''
-Test use of the MetaBase API
-'''
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Aug 13 09:56:44 2021
 
+@author: dpgraham4401
+"""
 import sys
-import json
-import os
+# import json
+# import os
 import auth
 import query
-from card import MetaRequest
+# from card import MetaRequest
 
 if not sys.version_info > (2, 7):
     print('error: python version 2 not supported')
@@ -19,6 +21,6 @@ base_url = 'https://rcraquery.epa.gov/metabase'
 auth.token()
 test = query.get_card_id('2991', 'json')
 # Only works with json at the moment
-#test = MetaRequest(base_url, os.getenv('META_TOKEN'))
+# test = MetaRequest(base_url, os.getenv('META_TOKEN'))
 print(test)
-#print(json.dumps(test.get('/api/card/2991'), indent = 1))
+# print(json.dumps(test.get('/api/card/2991'), indent = 1))
