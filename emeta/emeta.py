@@ -1,4 +1,5 @@
 """
+100+ lines of the worst code I've ever written, but whatever it's workign for now
 Library of functions for using metabase API available at RCRAQuery.epa.gov
 """
 from datetime import datetime, timedelta
@@ -21,10 +22,16 @@ def authenticate():
     try:
         if not os.getenv('META_TOKEN'):
             print("Token: no token present")
-            if not os.path.exists("C:\\Users\\dgraha01\\.env"):
-                __login()
-            token_obj = __get_token()
-            __write_token(token_obj)
+            if not os.getenv('META_USER'):
+                print("META_USER variable not found in environment")
+                sys.exit(1)
+            elif not os.getenv("META_PASSWD"):
+                print("META_USER variable not found in environment")
+                sys.exit(1)
+            else:
+                token_obj = __get_token()
+                __set_environment_variables(token_obj)
+                __write_token(token_obj)
         elif os.getenv('TOKEN_EXP'):
             current_time = datetime.now()
             current_time = current_time.isoformat()
@@ -81,9 +88,10 @@ def __login():
     os.environ['META_PASSWD'] = input("Metabase password: ")
 
 
-def __get(end_point, header):
+def __get(end_point):
     """basic GET request currently no parameter options"""
-    res = requests.get(end_point, headers=header)
+    meta_head = {'Content-Type': 'application/json'}
+    res = requests.get(end_point, headers=meta_head)
     if res.ok:
         res = res.json()
         return res
@@ -91,9 +99,10 @@ def __get(end_point, header):
         sys.exit(1)
 
 
-def __post(end_point, post_data, header):
+def __post(end_point, post_data):
     """Basic POST Metabase endpoints"""
-    res = requests.post(end_point, data=post_data, headers=header)
+    meta_head = {'Content-Type': 'application/json'}
+    res = requests.post(end_point, data=post_data, headers=meta_head)
     if res.ok:
         res = res.json()
         return res
@@ -106,14 +115,16 @@ def __get_token():
     user = os.getenv('META_USER')
     passwd = os.getenv('META_PASSWD')
     meta_data = json.dumps({'username': user, 'password': passwd})
-    meta_head = {'Content-Type': 'application/json'}
-    res = __post(AUTH_URL, meta_data, meta_head)
+    res = __post(AUTH_URL, meta_data)
     token_exp = datetime.now() + timedelta(days=EXPIRATION_DAYS)
     token_exp = token_exp.isoformat()
     token_obj = {'id': res['id'], 'exp': token_exp}
-    os.environ['META_TOKEN'] = token_obj['id']
-    os.environ['TOKEN_EXP'] = token_obj['exp']
     return token_obj
+
+
+def __set_environment_variables(token_object):
+    os.environ['META_TOKEN'] = token_object['id']
+    os.environ['TOKEN_EXP'] = token_object['exp']
 
 
 def __write_token(token_obj):

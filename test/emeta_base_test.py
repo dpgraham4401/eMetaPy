@@ -21,7 +21,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(type(resp), dict)
 
     def test_query_parameters(self):
-        parameter = {"GEN_ID_VAR", "TXR000040923"}
+        parameter = {"GEN_ID_VAR": "TXR000040923"}
         resp = emeta.get_query('2944', 'json', parameter)
         print(resp)
         self.assertEqual(type(resp), dict)
