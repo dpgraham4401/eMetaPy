@@ -2,3 +2,7 @@
 .vscode
 .spyproject
 __pycache__
+.idea
+*.egg-info
+
+emeta/old/*
