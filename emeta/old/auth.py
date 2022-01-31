@@ -1,5 +1,5 @@
 """
-auth.py
+emeta.py
 authorization for https://rcraquery.epa.gov
 @author: dpgraham4401
 """
@@ -9,21 +9,19 @@ import os
 import sys
 import json
 import requests
-from dotenv import load_dotenv
 
 BASE_URL = 'https://rcraquery.epa.gov/metabase'
 AUTH_URL = BASE_URL + '/api/session'
 EXPIRATION_DAYS = 12
 
 
-def token():
+def authenticate():
     """logic for if new token needed and local storage"""
-    load_dotenv()
     try:
         if not os.getenv('META_TOKEN'):
             print("Token: no token present")
-            if not os.path.exists('.env'):
-                print("no .env file found")
+            if not os.path.exists('~/.env'):
+                print("no ~/.env file found")
                 os.environ['META_USER'] = input("Metabase username: ")
                 os.environ['META_PASSWD'] = input("Metabase password: ")
             token_obj = __get_token()
@@ -64,8 +62,10 @@ def __get_token():
 
 def __write_token(token_obj):
     try:
-        file = open(".env", "a")
-        file.write("\nMETA_TOKEN=" + token_obj['id'] + '\n')
+        metabase_token_file = os.environ['HOME'] + "/.env"
+        file = open(metabase_token_file, "w")
+        file.write("\n")
+        file.write("META_TOKEN=" + token_obj['id'] + '\n')
         file.write("TOKEN_EXP=" + token_obj['exp'])
         file.close()
     except IOError as err:
