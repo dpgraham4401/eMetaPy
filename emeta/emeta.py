@@ -28,6 +28,28 @@ def authenticate():
                 sys.exit(1)
 
 
+def get_query(card_id, response_format, parameters=None):
+    """
+    Request query (card) options
+
+    Args:
+        card_id (str): Metabase query ID number in string format
+        response_format (str): "json" or "csv"
+        parameters (dict): dictionary with key values corresponding to metabase variable names
+    """
+    url_parameters = __parse_params(parameters)
+    endpoint = BASE_URL + '/api/card/' + card_id + '/query/' + response_format + url_parameters
+    token_id = os.getenv('META_TOKEN')
+    meta_head = {'Content-Type': 'application/json',
+                 'X-Metabase-Session': token_id}
+    res = requests.post(endpoint, headers=meta_head)
+    if res.ok:
+        res = res.json()
+        return res
+    else:
+        sys.exit(1)
+
+
 def __check_token_exists():
     if os.getenv("META_TOKEN"):
         return bool(os.getenv("META_EXP"))
@@ -50,21 +72,22 @@ def __check_login_exist():
         return False
 
 
-def get_query(card_id, response_format, parameters=None):
-    """
-    Request query (card) options
+def __get_token():
+    """Request new session token"""
+    user = os.getenv('META_USER')
+    passwd = os.getenv('META_PASSWD')
+    meta_data = json.dumps({'username': user, 'password': passwd})
+    res = __post(AUTH_URL, meta_data)
+    token_exp = datetime.now() + timedelta(days=EXPIRATION_DAYS)
+    token_exp = token_exp.isoformat()
+    token_obj = {'id': res['id'], 'exp': token_exp}
+    return token_obj
 
-    Args:
-        card_id (str): Metabase query ID number in string format
-        response_format (str): "json" or "csv"
-        parameters (dict): dictionary with key values corresponding to metabase variable names
-    """
-    url_parameters = __parse_params(parameters)
-    endpoint = BASE_URL + '/api/card/' + card_id + '/query/' + response_format + url_parameters
-    token_id = os.getenv('META_TOKEN')
-    meta_head = {'Content-Type': 'application/json',
-                 'X-Metabase-Session': token_id}
-    res = requests.post(endpoint, headers=meta_head)
+
+def __post(end_point, post_data):
+    """Basic POST Metabase endpoints"""
+    meta_head = {'Content-Type': 'application/json'}
+    res = requests.post(end_point, data=post_data, headers=meta_head)
     if res.ok:
         res = res.json()
         return res
@@ -93,29 +116,6 @@ def __get(end_point):
         return res
     else:
         sys.exit(1)
-
-
-def __post(end_point, post_data):
-    """Basic POST Metabase endpoints"""
-    meta_head = {'Content-Type': 'application/json'}
-    res = requests.post(end_point, data=post_data, headers=meta_head)
-    if res.ok:
-        res = res.json()
-        return res
-    else:
-        sys.exit(1)
-
-
-def __get_token():
-    """Request new session token"""
-    user = os.getenv('META_USER')
-    passwd = os.getenv('META_PASSWD')
-    meta_data = json.dumps({'username': user, 'password': passwd})
-    res = __post(AUTH_URL, meta_data)
-    token_exp = datetime.now() + timedelta(days=EXPIRATION_DAYS)
-    token_exp = token_exp.isoformat()
-    token_obj = {'id': res['id'], 'exp': token_exp}
-    return token_obj
 
 
 def __set_environment_variables(token_object):
