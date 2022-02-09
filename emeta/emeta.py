@@ -32,14 +32,14 @@ def authenticate():
                 token_obj = __get_token()
                 __set_environment_variables(token_obj)
                 __write_token(token_obj)
-        elif os.getenv('TOKEN_EXP'):
+        elif os.getenv('META_EXP'):
             current_time = datetime.now()
             current_time = current_time.isoformat()
-            if os.getenv('TOKEN_EXP') < current_time:
+            if os.getenv('META_EXP') < current_time:
                 print("Token status: expired, retrieving new token")
                 token_obj = __get_token()
                 __write_token(token_obj)
-            elif os.getenv('TOKEN_EXP') >= current_time:
+            elif os.getenv('META_EXP') >= current_time:
                 print("Token status: Good")
         else:
             print("Token error: hmm something ain't right contact support")
@@ -124,7 +124,7 @@ def __get_token():
 
 def __set_environment_variables(token_object):
     os.environ['META_TOKEN'] = token_object['id']
-    os.environ['TOKEN_EXP'] = token_object['exp']
+    os.environ['META_EXP'] = token_object['exp']
 
 
 def __write_token(token_obj):
@@ -133,7 +133,7 @@ def __write_token(token_obj):
         file = open(metabase_token_file, "w")
         file.write("\n")
         file.write("META_TOKEN=" + token_obj['id'] + '\n')
-        file.write("TOKEN_EXP=" + token_obj['exp'])
+        file.write("META_EXP=" + token_obj['exp'])
         file.close()
     except IOError as err:
         print(err)
