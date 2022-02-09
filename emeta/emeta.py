@@ -14,10 +14,7 @@ EXPIRATION_DAYS = 12
 
 
 def authenticate():
-    """
-    Authenticate RCRAQuery account with username and password in runtime environment
-
-    """
+    """Authenticate RCRAQuery account with username and password in runtime environment"""
     token_exist = __check_token_exists()
     if token_exist:
         token_fresh = __check_token_expiration()
