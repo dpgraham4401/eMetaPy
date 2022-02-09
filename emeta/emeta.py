@@ -7,6 +7,7 @@ import os
 import sys
 import json
 import requests
+import urllib.parse
 
 BASE_URL = 'https://rcraquery.epa.gov/metabase'
 AUTH_URL = BASE_URL + '/api/session'
@@ -101,10 +102,17 @@ def __parse_params(parameters):
     if parameters is None:
         return ""
     else:
+        parameter_string = ""
         for i in parameters:
-            return "?parameters=%5B%7B%22type%22%3A%22category%22%2C%22target%22%3A%5B%22variable%22%2C%5B%22temp" \
-                                     "late-tag%22%2C%22" + i + "%22%5D%5D%2C%22value%22%3A%22" + parameters[
-                                         i] + "%22%7D%5D"
+            partial_param_string = '{"type":"category","target":["variable",["template-tag","{0}"]],"value":"{1}"}'
+            partial_param_string = partial_param_string.replace('{0}', i).replace('{1}', parameters[i])
+            parameter_string = parameter_string + partial_param_string
+        parameter_string = "[" + partial_param_string + "]"
+        print(parameter_string)
+        test = urllib.parse.quote(parameter_string)
+        test = "?parameters=" + test
+        print("test2: ", test)
+        return test
 
 
 def __get(end_point):
