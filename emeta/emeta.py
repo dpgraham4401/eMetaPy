@@ -103,16 +103,15 @@ def __parse_params(parameters):
         return ""
     else:
         parameter_string = ""
-        for i in parameters:
+        for index, i in enumerate(parameters):
             partial_param_string = '{"type":"category","target":["variable",["template-tag","{0}"]],"value":"{1}"}'
             partial_param_string = partial_param_string.replace('{0}', i).replace('{1}', parameters[i])
+            if index > 0:
+                partial_param_string = "," + partial_param_string
             parameter_string = parameter_string + partial_param_string
-        parameter_string = "[" + partial_param_string + "]"
-        print(parameter_string)
-        test = urllib.parse.quote(parameter_string)
-        test = "?parameters=" + test
-        print("test2: ", test)
-        return test
+        parameter_string = "[" + parameter_string + "]"
+        url_encoded = urllib.parse.quote(parameter_string)
+        return "?parameters=" + url_encoded
 
 
 def __get(end_point):

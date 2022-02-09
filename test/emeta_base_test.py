@@ -26,6 +26,12 @@ class MyTestCase(unittest.TestCase):
         print(resp)
         self.assertEqual(type(resp), list)
 
+    def test_multi_param_query(self):
+        parameter = {"GEN_ID_VAR": "TXR000040923",
+                     "TSDF_ID_VAR": "TXD000719518"}
+        resp = emeta.get_query('2944', 'json', parameter)
+        self.assertIn("Count of manifests", str(resp[0]))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -4,6 +4,7 @@ emeta.authenticate()
 # resp = emeta.get_query('2944', 'json')
 # print(resp)
 
-parameter = {"GEN_ID_VAR": "TXR000040923"}
+parameter = {"GEN_ID_VAR": "TXR000040923",
+             "TSDF_ID_VAR": "TXD000719518"}
 resp = emeta.get_query('2944', 'json', parameter)
-print(resp)
+print(resp[0])
