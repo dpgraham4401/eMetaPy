@@ -12,19 +12,19 @@ class MyTestCase(unittest.TestCase):
             dotenv.load_dotenv("C:\\Users\\dgraha01\\.env")
         else:
             print("nope")
-            sys.exit(0)
+            sys.exit(1)
             emeta.authenticate()
         self.assertEqual(type(os.getenv('META_TOKEN')), str)
 
     def test_get_query(self):
         resp = emeta.get_query('2944', 'json')
-        self.assertEqual(type(resp), dict)
+        self.assertEqual(type(resp), list)
 
     def test_query_parameters(self):
         parameter = {"GEN_ID_VAR": "TXR000040923"}
         resp = emeta.get_query('2944', 'json', parameter)
         print(resp)
-        self.assertEqual(type(resp), dict)
+        self.assertEqual(type(resp), list)
 
 
 if __name__ == '__main__':
