@@ -1,4 +1,5 @@
-.env
+*.env
+venv/
 .vscode
 .spyproject
 __pycache__
